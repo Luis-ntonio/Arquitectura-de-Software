@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from Lab1.services.product_service import list_products, add_product, update_product_by_id, get_product_by_id
-from Lab1.api.schemas import ProductRequest, ProductResponse
+from services.product_service import list_products, add_product, update_product_by_id, get_product_by_id
+from api.schemas import ProductRequest, ProductResponse
 
 router = APIRouter()
 

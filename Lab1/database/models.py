@@ -1,4 +1,4 @@
-from connection import get_connection
+from .connection import get_connection
 
 def create_tables():
     conn = get_connection()
@@ -22,16 +22,16 @@ def create_tables():
             email TEXT NOT NULL,
             password TEXT NOT NULL,
             saldo FLOAT NOT NULL,
-            monedero_ahorro FLOAT NOT NULL,
+            monedero_ahorro FLOAT NOT NULL
         );
     """)
 
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS tiendas (
-            id SERIAL PRYMARY KEY,
+            id SERIAL PRIMARY KEY,
             nombre TEXT NOT NULL,
-            direccion TEXT NOT NULL,
+            direccion TEXT NOT NULL
         );
     """)
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from Lab1.services.cart_service import add_to_cart, get_cart, delete_all_cart
-from Lab1.api.schemas import CartRequest, CartResponse, CartItemRequest
+from services.cart_service import add_to_cart, get_cart, delete_all_cart
+from api.schemas import CartRequest, CartResponse, CartItemRequest
 
 router = APIRouter()
 

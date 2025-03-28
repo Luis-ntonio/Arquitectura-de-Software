@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from datetime import datetime
 
 # Products
@@ -13,21 +13,6 @@ class ProductResponse(BaseModel):
     quantity: int
     price: float
     created_at: datetime
-
-# Users
-class UserRequest(BaseModel):
-    name: str
-    email: EmailStr
-    password: str
-    saldo: float
-    monedero_ahorro: float
-
-class UserResponse(BaseModel):
-    id: int
-    name: str
-    email: EmailStr
-    saldo: float
-    monedero_ahorro: float
 
 # Stores (Tiendas)
 class StoreRequest(BaseModel):
@@ -54,7 +39,7 @@ class CartItemRequest(BaseModel):
 # User
 class UserRequest(BaseModel):
     name: str
-    email: EmailStr
+    email: str
     password: str
     saldo: float
     monedero_ahorro: float

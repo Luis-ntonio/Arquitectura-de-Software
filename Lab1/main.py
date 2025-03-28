@@ -1,24 +1,24 @@
 from fastapi import FastAPI
-from Lab1.database.connection import get_connection
-from Lab1.database.models import create_tables
-from Lab1.api.cart_endpoints import router as cart_router
-from Lab1.api.wallet_endpoints import router as wallet_router
-from Lab1.api.products_endpoints import router as products_router
-from Lab1.api.user_endpoint import router as user_router
+from database.connection import get_connection
+from database.models import create_tables
+from api.cart_endpoints import router as cart_router
+from api.wallet_endpoints import router as wallet_router
+from api.products_endpoints import router as products_router
+from api.user_endpoint import router as user_router
 
-from Lab1.api.user_endpoint import add_user, get_user
-from Lab1.api.products_endpoints import get_products, create_product, update_product, get_products_by_id
-from Lab1.api.cart_endpoints import add_item_to_cart, get_cart_items, empty_cart
-from Lab1.api.wallet_endpoints import add_wallet_funds, get_wallet_balance, discount_wallet
+from api.user_endpoint import add_user, get_user
+from api.products_endpoints import get_products, create_product, update_product, get_products_by_id
+from api.cart_endpoints import add_item_to_cart, get_cart_items, empty_cart
+from api.wallet_endpoints import add_wallet_funds, get_wallet_balance, discount_wallet
 
-from Lab1.api.schemas import *
+from api.schemas import *
 
 app = FastAPI()
 
 @app.on_event("startup")
 def startup_event():
     conn = get_connection()
-    create_tables(conn)  # Cambiado para reflejar la función correcta
+    create_tables()  # Cambiado para reflejar la función correcta
     conn.close()
 
 def simulate_purchase(user_id: int):

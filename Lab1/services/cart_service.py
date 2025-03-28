@@ -1,4 +1,4 @@
-from Lab1.database.connection import get_connection
+from database.connection import get_connection
 
 def add_to_cart(item):
     conn = get_connection()

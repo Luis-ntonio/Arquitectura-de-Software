@@ -1,6 +1,5 @@
 from fastapi import APIRouter
-from Lab1.services.wallet_service import add_funds, get_balance, discount_wallet_by_user_id
-from Lab1.api.schemas import WalletRequest, WalletResponse
+from services.wallet_service import add_funds, get_balance, discount_wallet_by_user_id
 
 router = APIRouter()
 

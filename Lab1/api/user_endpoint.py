@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from Lab1.services.user_service import get_user_by_id, create_user
-from schemas import UserRequest
+from services.user_service import get_user_by_id, create_user
+from .schemas import UserRequest
 
 router = APIRouter()
 
