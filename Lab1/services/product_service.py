@@ -22,7 +22,7 @@ def add_product(product):
     conn.close()
     return {"id": product_id, "product_name": product.product_name, "quantity": product.quantity, "price": product.price, "created_at": created_at}
 
-def update_product(product_id, cantidad):
+def update_product_by_id(product_id, cantidad):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
@@ -33,3 +33,13 @@ def update_product(product_id, cantidad):
     cur.close()
     conn.close()
     return {"id": product[0], "product_name": product[1], "quantity": product[2], "price": product[3], "created_at": product[4]}
+
+def get_product_by_id(product_id:int):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, product_name, quantity, price, created_at FROM productos WHERE id = %s;", (product_id,))
+    product = cur.fetchone()
+    cur.close()
+    conn.close()
+    return {"id": product[0], "product_name": product[1], "quantity": product[2], "price": product[3], "created_at": product[4]}
+    

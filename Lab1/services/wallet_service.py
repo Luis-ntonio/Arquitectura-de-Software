@@ -28,14 +28,14 @@ def get_balance(user_id):
         conn.close()
     return {"saldo": balance}
 
-def discount_wallet(amount):
+def discount_wallet_by_user_id(amount, user_id):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
         UPDATE users
         SET saldo = saldo - %s
-        WHERE id = 1 RETURNING saldo;
-    """, (amount,))
+        WHERE id = %s RETURNING saldo;
+    """, (amount, user_id))
     new_balance = cur.fetchone()[0]
     conn.commit()
     cur.close()
