@@ -1,11 +1,48 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
-class SaleRequest(BaseModel):
+# Products
+class ProductRequest(BaseModel):
     product_name: str
     quantity: int
     price: float
 
-class SaleResponse(BaseModel):
+class ProductResponse(BaseModel):
     id: int
+    product_name: str
+    quantity: int
+    price: float
     created_at: datetime
+
+# Users
+class UserRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    saldo: float
+    monedero_ahorro: float
+
+class UserResponse(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+    saldo: float
+    monedero_ahorro: float
+
+# Stores (Tiendas)
+class StoreRequest(BaseModel):
+    nombre: str
+    direccion: str
+
+class StoreResponse(BaseModel):
+    id: int
+    nombre: str
+    direccion: str
+
+# Cart (Carrito)
+class CartRequest(BaseModel):
+    user_id: int
+
+class CartResponse(BaseModel):
+    id: int
+    user_id: int

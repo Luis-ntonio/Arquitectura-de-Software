@@ -1,25 +1,24 @@
 from Lab1.database.connection import get_connection
 
-def update_wallet(user_id: int, amount: float, monedero_ahorro: bool):
+def add_funds(wallet):
     conn = get_connection()
     cur = conn.cursor()
-    
-    if not monedero_ahorro:
-        cur.execute("""
-            UPDATE users SET saldo = saldo - %s
-            WHERE user_id = %s
-            RETURNING id, saldo;
-        """, (amount, user_id))
-        
-    else:
-        cur.execute("""
-            UPDATE users SET monedero_ahorro = monedero_ahorro - %s
-            WHERE user_id = %s
-            RETURNING id, monedero_ahorro;
-        """, (amount, user_id))
-
-    user_id, saldo = cur.fetchone()
+    cur.execute("""
+        UPDATE users
+        SET saldo = saldo + %s
+        WHERE id = 1 RETURNING saldo;
+    """, (wallet.amount,))
+    new_balance = cur.fetchone()[0]
     conn.commit()
     cur.close()
     conn.close()
-    return {"id": user_id, "saldo": saldo}
+    return {"balance": new_balance}
+
+def get_balance():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT saldo FROM users WHERE id = 1;")
+    balance = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+    return {"balance": balance}
