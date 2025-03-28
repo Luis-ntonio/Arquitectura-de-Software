@@ -1,0 +1,37 @@
+# Análisis e Implementación de una Arquitectura de Software
+
+Este proyecto tiene como objetivo analizar e implementar una arquitectura de software eficiente y escalable, aplicando principios de diseño y buenas prácticas de desarrollo.
+
+## Descripción de la Arquitectura
+
+En esta sección se describe la arquitectura utilizada, incluyendo sus componentes principales, patrones de diseño aplicados y cómo interactúan entre sí. Por ejemplo:
+
+- **Patrón utilizado**: MVC (Modelo-Vista-Controlador)
+- **Componentes principales**:
+  - **Modelo**: Gestión de datos y lógica de negocio.
+  - **Vista**: Interfaz de usuario.
+  - **Controlador**: Manejo de la lógica de interacción entre el modelo y la vista.
+
+## Pros y Contras de la Arquitectura
+
+### Pros
+- **Escalabilidad**: La arquitectura permite agregar nuevas funcionalidades sin afectar las existentes.
+- **Mantenibilidad**: El código está organizado y modular, facilitando su mantenimiento.
+- **Reutilización**: Los componentes pueden ser reutilizados en otros proyectos.
+
+### Contras
+- **Complejidad inicial**: Requiere un esfuerzo inicial significativo para diseñar y configurar.
+- **Curva de aprendizaje**: Puede ser difícil de entender para desarrolladores nuevos en el patrón utilizado.
+- **Sobrecarga**: En proyectos pequeños, puede ser excesivo implementar una arquitectura compleja.
+
+## Cómo Ejecutar el Proyecto
+
+1. Clonar el repositorio.
+2. Instalar las dependencias necesarias.
+3. Ejecutar el proyecto utilizando el comando correspondiente.
+
+```bash
+# Ejemplo de comandos
+git clone <URL_DEL_REPOSITORIO>
+cd <NOMBRE_DEL_PROYECTO>
+<COMANDO_PARA_EJECUTAR>
