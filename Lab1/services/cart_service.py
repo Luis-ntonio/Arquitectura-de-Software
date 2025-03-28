@@ -12,14 +12,14 @@ def add_to_cart(item, user_id):
     conn.close()
     return {"id": [item], "user_id": user_id}  # Ejemplo
 
-def get_cart():
+def get_cart(user_id: int):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT user_id, product_id, quantity FROM cart;")
+    cur.execute("SELECT product_id, cantidad FROM cart WHERE user_id = %s;", (user_id,))
     items = cur.fetchall()
     cur.close()
     conn.close()
-    return {}
+    return {"user_id": user_id, "items": [{"product_id": item[0], "quantity": item[1]} for item in items]}
 
 
 def delete_all_cart(user_id: int):

@@ -49,3 +49,6 @@ class CartResponse(BaseModel):
 class CartItemRequest(BaseModel):
     product_id: int
     quantity: int
+
+class WalletResponse(BaseModel):
+    saldo: float

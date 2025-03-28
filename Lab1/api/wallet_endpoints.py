@@ -4,14 +4,14 @@ from Lab1.api.schemas import WalletRequest, WalletResponse
 
 router = APIRouter()
 
-@router.post("/wallet")
-def add_wallet_funds(amount: int):
-    return add_funds(amount)
+@router.post("/wallet/{user_id}", response_model=WalletResponse)
+def add_wallet_funds(amount: int, user_id: int):
+    return add_funds(amount, user_id=user_id)
 
-@router.get("/wallet")
-def get_wallet_balance():
-    return get_balance()
+@router.get("/wallet/{user_id}", response_model=WalletResponse)
+def get_wallet_balance(user_id: int):
+    return get_balance(user_id=user_id)
 
-@router.patch("/wallet")
-def discount_wallet(amount: float):
-    return discount_wallet(amount)
+@router.patch("/wallet/{user_id}", response_model=WalletResponse)
+def discount_wallet(amount: float, user_id: int):
+    return discount_wallet(amount, user_id=user_id)
