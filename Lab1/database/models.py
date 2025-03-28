@@ -35,6 +35,17 @@ def create_tables():
         );
     """)
 
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS carrito (
+            id SERIAL PRIMARY KEY,
+            user_id INT NOT NULL,
+            product_id INT NOT NULL,
+            cantidad INT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            FOREIGN KEY (product_id) REFERENCES productos(id)
+        );
+    """)
+
     conn.commit()
     cur.close()
     conn.close()
