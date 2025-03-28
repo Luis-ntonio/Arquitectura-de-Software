@@ -49,3 +49,11 @@ class CartResponse(BaseModel):
 class CartItemRequest(BaseModel):
     product_id: int
     quantity: int
+
+# User
+class UserRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    saldo: float
+    monedero_ahorro: float
