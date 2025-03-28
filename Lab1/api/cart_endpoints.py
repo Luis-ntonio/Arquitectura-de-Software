@@ -8,9 +8,9 @@ router = APIRouter()
 def add_item_to_cart(item: CartItemRequest):
     return add_to_cart(item)
 
-@router.get("/cart", response_model=CartResponse)
-def get_cart_items():
-    return get_cart()
+@router.get("/cart/{user_id}", response_model=CartResponse)
+def get_cart_items(user_id: int):
+    return get_cart(user_id)
 
 @router.delete("/cart/{user_id}")
 def empty_cart(user_id: int):
