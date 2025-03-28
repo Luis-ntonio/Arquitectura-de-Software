@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from Lab1.services.cart_service import add_to_cart, get_cart
-from Lab1.api.schemas import CartItemRequest, CartResponse
+from Lab1.services.cart_service import add_to_cart, get_cart, delete_all_cart
+from Lab1.api.schemas import CartRequest, CartResponse, CartItemRequest
 
 router = APIRouter()
 
@@ -11,3 +11,7 @@ def add_item_to_cart(item: CartItemRequest):
 @router.get("/cart", response_model=CartResponse)
 def get_cart_items():
     return get_cart()
+
+@router.delete("/cart/{user_id}")
+def empty_cart(user_id: int):
+    return delete_all_cart(user_id)

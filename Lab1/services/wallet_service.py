@@ -1,18 +1,18 @@
 from Lab1.database.connection import get_connection
 
-def add_funds(wallet):
+def add_funds(amount):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
         UPDATE users
         SET saldo = saldo + %s
         WHERE id = 1 RETURNING saldo;
-    """, (wallet.amount,))
+    """, (amount,))
     new_balance = cur.fetchone()[0]
     conn.commit()
     cur.close()
     conn.close()
-    return {"balance": new_balance}
+    return {"saldo": new_balance}
 
 def get_balance():
     conn = get_connection()
@@ -21,4 +21,18 @@ def get_balance():
     balance = cur.fetchone()[0]
     cur.close()
     conn.close()
-    return {"balance": balance}
+    return {"saldo": balance}
+
+def discount_wallet(amount):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE users
+        SET saldo = saldo - %s
+        WHERE id = 1 RETURNING saldo;
+    """, (amount,))
+    new_balance = cur.fetchone()[0]
+    conn.commit()
+    cur.close()
+    conn.close()
+    return {"saldo": new_balance}

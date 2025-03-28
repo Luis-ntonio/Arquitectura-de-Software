@@ -21,3 +21,15 @@ def add_product(product):
     cur.close()
     conn.close()
     return {"id": product_id, "product_name": product.product_name, "quantity": product.quantity, "price": product.price, "created_at": created_at}
+
+def update_product(product_id, cantidad):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE productos SET quantity = quantity - %s WHERE id = %s RETURNING id, product_name, quantity, price, created_at;
+    """, (cantidad, product_id))
+    product = cur.fetchone()
+    conn.commit()
+    cur.close()
+    conn.close()
+    return {"id": product[0], "product_name": product[1], "quantity": product[2], "price": product[3], "created_at": product[4]}

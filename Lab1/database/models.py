@@ -36,7 +36,7 @@ def create_tables():
     """)
 
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS carrito (
+        CREATE TABLE IF NOT EXISTS cart (
             id SERIAL PRIMARY KEY,
             user_id INT NOT NULL,
             product_id INT NOT NULL,

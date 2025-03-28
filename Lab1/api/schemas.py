@@ -44,5 +44,8 @@ class CartRequest(BaseModel):
     user_id: int
 
 class CartResponse(BaseModel):
-    id: int
     user_id: int
+
+class CartItemRequest(BaseModel):
+    product_id: int
+    quantity: int
