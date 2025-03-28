@@ -67,8 +67,8 @@ def simulate_purchase(user_id: int):
 
         # Paso 7: Actualizar la cantidad de productos
         print("Actualizando cantidades de productos...")
-        update_product(product_id=1, quantity_sold=2)
-        update_product(product_id=2, quantity_sold=1)
+        update_product(product_id=1, cantidad=2)
+        update_product(product_id=2, cantidad=1)
         print("Cantidades de productos actualizadas.")
 
         # Paso 8: Limpiar el carrito
@@ -88,4 +88,4 @@ if __name__ == "__main__":
     app.include_router(cart_router, prefix="/cart", tags=["Cart"])
     app.include_router(wallet_router, prefix="/wallet", tags=["Wallet"])
     app.include_router(products_router, prefix="/products", tags=["Products"])
-    #simulate_purchase(user_id=1)
+    simulate_purchase(user_id=1)

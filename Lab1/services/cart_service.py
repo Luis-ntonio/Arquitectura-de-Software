@@ -5,7 +5,7 @@ def add_to_cart(item):
     cur = conn.cursor()
     cur.execute("""
         INSERT INTO cart (user_id, product_id, cantidad)
-        VALUES (%s, %s);
+        VALUES (%s, %s, %s);
     """, (item.user_id, item.product_id, item.quantity))
     conn.commit()
     cur.close()
