@@ -1,18 +1,20 @@
+import psycopg2
+import os
+import dotenv
+
+dotenv.load_dotenv()
+
 def create_table(conn, embedding_dim=384):
     """
-    Crea la tabla 'chunks' en PostgreSQL utilizando la extension PGVector.
-    Se asume que la extensión 'vector' esta instalada en la base de datos.
+    Crea tabla para almacenar el entorno de datos.
 
     Args:
         conn: Conexión a la base de datos.
-        embedding_dim (int): Dimensión del embedding a almacenar.
 
     Returns:
         None
     """
     cur = conn.cursor()
-    # Asegurarse de que la extensión PGVector esté instalada
-    cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
     # Crear la tabla para almacenar los chunks y sus embeddings
     cur.execute(f"""
         CREATE TABLE IF NOT EXISTS chunks (
@@ -26,9 +28,9 @@ def create_table(conn, embedding_dim=384):
 
 def create_conn():
     conn = psycopg2.connect(
-        dbname="amber",
-        user="postgres",
-        password="1234",
-        host="localhost"
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        host=os.getenv("DB_HOST"),
     )
     return conn
