@@ -19,7 +19,7 @@ En esta sección se describe la arquitectura utilizada, incluyendo sus component
 
 ### Diagrama de la Arquitectura
 
-![Diagrama de Arquitectura](../../images/Grupo-a.pdf)
+![Diagrama de Arquitectura](./images/Grupo-a.pdf)
 
 ## Pros y Contras de la Arquitectura
 
