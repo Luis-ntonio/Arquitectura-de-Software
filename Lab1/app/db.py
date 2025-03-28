@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2 import sql
-import os
+from dotenv import load_dotenv
 
 DB_CONFIG = {
     "dbname": os.getenv("POSTGRES_DB", "inkafarma"),
