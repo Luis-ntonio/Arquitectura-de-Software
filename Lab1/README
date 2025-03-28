@@ -24,15 +24,14 @@ En esta sección se describe la arquitectura utilizada, incluyendo sus component
 ## Pros y Contras de la Arquitectura
 
 ### Pros
-- **Escalabilidad**: La arquitectura permite agregar nuevas funcionalidades sin afectar las existentes.
-- **Mantenibilidad**: El código está organizado y modular, facilitando su mantenimiento.
-- **Reutilización**: Los componentes pueden ser reutilizados en otros proyectos.
+- **Completitud**: La arquitectura propuesta cumple detallando la mayoris de los diferentes endpoints que se requieren para cumplir con un happy path.
+- **Reutilización**: Los endpoints pueden ser reutilizados en otros proyectos.
 
 ### Contras
-- **Complejidad inicial**: Requiere un esfuerzo inicial significativo para diseñar y configurar.
-- **Curva de aprendizaje**: Puede ser difícil de entender para desarrolladores nuevos en el patrón utilizado.
+- **Faltan endpoints**: No se cuenta con endpoints para el login 
+- **Desconocimiento de Tablas BD**: No se comprende en totalidad la estrutura de las Bases de datos, las tablas que son contenidas por estas.
 - **Sobrecarga**: En proyectos pequeños, puede ser excesivo implementar una arquitectura compleja.
-
+- **No es escalable**: La arquitectura no cuenta con balanceadores de cargas entre otras cosas que complicarian la escalabilidad de datos.
 ## Cómo Ejecutar el Proyecto
 
 1. Clonar el repositorio.
