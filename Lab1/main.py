@@ -88,4 +88,4 @@ if __name__ == "__main__":
     app.include_router(cart_router, prefix="/cart", tags=["Cart"])
     app.include_router(wallet_router, prefix="/wallet", tags=["Wallet"])
     app.include_router(products_router, prefix="/products", tags=["Products"])
-    simulate_purchase(user_id=1)
+    #simulate_purchase(user_id=1)
