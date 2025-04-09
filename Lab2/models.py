@@ -4,11 +4,6 @@ from typing import Optional, List
 from datetime import datetime
 from enum import Enum
 
-# Enum for user roles
-class UserRole(str, Enum):
-    owner = "owner"
-    client = "client"
-
 # Enum for reservation status
 class ReservationStatus(str, Enum):
     active = "active"
@@ -29,98 +24,54 @@ class PaymentStatus(str, Enum):
     refunded = "refunded"
     failed = "failed"
 
-# Authentication Models
-class UserCreate(BaseModel):
-    username: str = Field(..., min_length=3, max_length=50)
-    password: str = Field(..., min_length=6)
-    role: UserRole
-    email: EmailStr
+# MODELO XYZ
+class Distrito(BaseModel):
+    id: str
+    name: str
 
-class UserLogin(BaseModel):
-    username: str
-    password: str
-
-class UserResponse(BaseModel):
-    user_id: str
-    username: str
-    role: UserRole
-    email: EmailStr
-    created_at: str
-
-# Cochera Models
-class CocheraCreate(BaseModel):
-    location: str = Field(..., min_length=3, max_length=100)
-    price: float = Field(..., gt=0)
-    amenities: Optional[List[str]] = []
-    size: str = "Standard"
-
-class CocheraUpdate(BaseModel):
-    location: Optional[str]
-    price: Optional[float] = Field(None, gt=0)
-    status: Optional[CocheraStatus]
-    amenities: Optional[List[str]]
-    size: Optional[str]
-
-class CocheraResponse(BaseModel):
-    cochera_id: str
-    owner_id: str
+class Cochera(BaseModel):
+    id: str
     location: str
     price: float
     status: CocheraStatus
-    created_at: str
-    amenities: List[str]
     size: str
-    rating_avg: float
-    reviews_count: int
+    rating_avg: float = 0.0
 
-# Reservation Models
-class ReservaCreate(BaseModel):
+class Autos(BaseModel):
+    id : str
+    modelo: str
+    marca: str
+    color: str
+    placa: str
     cochera_id: str
-    start_time: str
-    end_time: str
 
-class ReservaUpdate(BaseModel):
-    status: Optional[ReservationStatus]
-    payment_status: Optional[PaymentStatus]
-
-class ReservaResponse(BaseModel):
-    reserva_id: str
+class Reserva(BaseModel):
+    id: str
+    cochera_id: str
     user_id: str
+    start_time: datetime
+    end_time: datetime
+    status: ReservationStatus = ReservationStatus.active
+    payment_status: PaymentStatus = PaymentStatus.pending
+
+class Ticket(BaseModel):
+    id: str
+    reserva_id: str
     cochera_id: str
-    start_time: str
-    end_time: str
-    status: ReservationStatus
-    created_at: str
-    price_total: float
-    payment_status: PaymentStatus
-
-# Review Models
-class ReviewCreate(BaseModel):
-    cochera_id: str
-    rating: int = Field(..., ge=1, le=5)
-    comment: str = Field(..., min_length=3, max_length=500)
-
-class ReviewUpdate(BaseModel):
-    rating: Optional[int] = Field(None, ge=1, le=5)
-    comment: Optional[str] = Field(None, min_length=3, max_length=500)
-
-class ReviewResponse(BaseModel):
-    review_id: str
     user_id: str
+    start_time: datetime
+    end_time: datetime
+    status: ReservationStatus = ReservationStatus.active
+
+class Disponibilidad(BaseModel):
     cochera_id: str
-    rating: int
-    comment: str
-    created_at: str
+    start_time: datetime
+    end_time: datetime
+    status: CocheraStatus = CocheraStatus.available
 
-# Payment Models
-class PaymentCreate(BaseModel):
-    reserva_id: str
-    amount: float
-    payment_method: str = "credit_card"
-
-class PaymentResponse(BaseModel):
-    payment_id: str
-    reserva_id: str
-    amount: float
-    status: PaymentStatus
-    created_at: str
+class Tarifas(BaseModel):
+    cochera_id: str
+    tarifa_hora: float
+    tarifa_dia: float
+    tarifa_semana: float
+    tarifa_mes: float
