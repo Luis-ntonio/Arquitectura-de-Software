@@ -3,20 +3,17 @@ from pydantic import BaseModel
 from datetime import datetime
 from enum import Enum
 
-# Enum for reservation status
 class ReservationStatus(str, Enum):
     active = "active"
     cancelled = "cancelled"
     completed = "completed"
 
-# Enum for cochera status
 class CocheraStatus(str, Enum):
     available = "available"
     reserved = "reserved"
     occupied = "occupied"
     maintenance = "maintenance"
 
-# Enum for payment status
 class PaymentStatus(str, Enum):
     pending = "pending"
     completed = "completed"
