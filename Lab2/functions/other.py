@@ -43,60 +43,60 @@ def search_cocheras(
         "results": [{"cochera_id": c_id, **data} for c_id, data in result.items()]
     }
 
-@router.post("/payment", response_model=PaymentResponse)
-def process_payment(
-    payment: PaymentCreate,
-    username: str = Body(..., embed=True),
-    password: str = Body(..., embed=True)
-):
-    """
-    Simulated payment processing for a reservation.
-    In a real app, this would integrate with a payment gateway.
-    """
-    # Retrieve and verify the user based on the provided username and password
-    current_user = get_user_by_username(username)
-    if not current_user or not verify_password(password, current_user["password"]):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password"
-        )
+# @router.post("/payment", response_model=PaymentResponse)
+# def process_payment(
+#     payment: PaymentCreate,
+#     username: str = Body(..., embed=True),
+#     password: str = Body(..., embed=True)
+# ):
+#     """
+#     Simulated payment processing for a reservation.
+#     In a real app, this would integrate with a payment gateway.
+#     """
+#     # Retrieve and verify the user based on the provided username and password
+#     current_user = get_user_by_username(username)
+#     if not current_user or not verify_password(password, current_user["password"]):
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect username or password"
+#         )
     
-    if current_user["role"] != "client":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only clients can make payments"
-        )
+#     if current_user["role"] != "client":
+#         raise HTTPException(
+#             status_code=status.HTTP_403_FORBIDDEN,
+#             detail="Only clients can make payments"
+#         )
     
-    if payment.reserva_id not in reservas_db:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Reservation not found"
-        )
+#     if payment.reserva_id not in reservas_db:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="Reservation not found"
+#         )
     
-    reserva = reservas_db[payment.reserva_id]
-    # Ensure the reservation belongs to the current user
-    if reserva["user_id"] != current_user["user_id"]:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="You can only pay for your own reservations"
-        )
+#     reserva = reservas_db[payment.reserva_id]
+#     # Ensure the reservation belongs to the current user
+#     if reserva["user_id"] != current_user["user_id"]:
+#         raise HTTPException(
+#             status_code=status.HTTP_403_FORBIDDEN,
+#             detail="You can only pay for your own reservations"
+#         )
     
-    # Check if the reservation has already been paid
-    if reserva["payment_status"] == "completed":
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="This reservation has already been paid"
-        )
+#     # Check if the reservation has already been paid
+#     if reserva["payment_status"] == "completed":
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail="This reservation has already been paid"
+#         )
     
-    reservas_db[payment.reserva_id]["payment_status"] = "completed"
+#     reservas_db[payment.reserva_id]["payment_status"] = "completed"
     
-    payment_id = str(uuid.uuid4())
-    created_at = datetime.now().isoformat()
+#     payment_id = str(uuid.uuid4())
+#     created_at = datetime.now().isoformat()
     
-    return {
-        "payment_id": payment_id,
-        "reserva_id": payment.reserva_id,
-        "amount": payment.amount,
-        "status": "completed",
-        "created_at": created_at
-    }
+#     return {
+#         "payment_id": payment_id,
+#         "reserva_id": payment.reserva_id,
+#         "amount": payment.amount,
+#         "status": "completed",
+#         "created_at": created_at
+#     }

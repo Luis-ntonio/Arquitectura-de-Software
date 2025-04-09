@@ -3,7 +3,7 @@ from typing import List, Optional
 from datetime import datetime
 
 from database import get_user_by_username, reservas_db, cocheras_db, generate_id
-from models import ReservaCreate, ReservaUpdate, ReservaResponse, ReservationStatus, CocheraStatus, PaymentStatus
+from models import ReservaCreate, ReservaUpdate, ReservaResponse, ReservationStatus, CocheraStatus, PaymentStatus, Reserva
 
 router = APIRouter()
 
