@@ -1,6 +1,5 @@
 # models.py
-from pydantic import BaseModel, Field, EmailStr
-from typing import Optional, List
+from pydantic import BaseModel
 from datetime import datetime
 from enum import Enum
 
@@ -35,7 +34,6 @@ class Cochera(BaseModel):
     price: float
     status: CocheraStatus
     size: str
-    rating_avg: float = 0.0
 
 class Autos(BaseModel):
     id : str
