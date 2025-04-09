@@ -7,6 +7,7 @@ from Lab2.models import (
     Distrito, Cochera, Autos, Reserva, Ticket, Disponibilidad, Tarifas,
     ReservationStatus, CocheraStatus, PaymentStatus
 )
+from Lab2.functions import cocheras 
 
 # Simulated tables (dictionaries)
 users_db: Dict[str, Dict] = {}                # Users DB
@@ -37,11 +38,6 @@ def get_user_by_username(username: str) -> Dict[str, Any]:
         if user_data["username"] == username:
             return {"user_id": user_id, **user_data}
     return None
-
-def update_cochera_rating(cochera_id: str) -> None:
-    """Update the average rating for a cochera"""
-    # This function is no longer relevant since disponibilidad_db no longer stores reviews.
-    pass
 
 def update_disponibilidad(cochera_id: str, available: bool) -> None:
     """Update the availability status of a cochera."""
@@ -102,15 +98,8 @@ def init_sample_data():
     for i in range(len(locations)):
         cochera_id = generate_id()
         cochera_ids.append(cochera_id)
-        cocheras_db[cochera_id] = Cochera(
-            id=cochera_id,
-            location=locations[i],
-            price=prices[i],
-            status=CocheraStatus.available,
-            size="Standard" if i < 2 else "Large"
-        )
+        cocheras_db[cochera_id] = cocheras.create_cochera(cochera_id, locations[i], prices[i], CocheraStatus.available, "Standard" if i % 2 == 0 else "Compact")
         
-        # Initialize availability for each cochera
         disponibilidad_db[cochera_id] = Disponibilidad(
             cochera_id=cochera_id,
             start_time=datetime.datetime.now(),
