@@ -1,13 +1,13 @@
 from fastapi import APIRouter, HTTPException, status, Query, Body
 from typing import Dict, Any, List, Optional
 from datetime import datetime
-from database import cocheras_db, generate_id, update_cochera_rating, get_user_by_username, reservas_db
-from models import CocheraCreate, CocheraUpdate, CocheraResponse
+from database import cocheras_db, reservas_db
+from models import Cochera
 from functions.auth import verify_password
 
 router = APIRouter()
 
-@router.get("/", response_model=List[CocheraResponse])
+@router.get("/")
 def list_cocheras(
     status: Optional[str] = Query(None, description="Filter by status"),
     location: Optional[str] = Query(None, description="Filter by location (partial match)"),
@@ -36,42 +36,8 @@ def list_cocheras(
         })
     return result
 
-@router.get("/owner", response_model=List[CocheraResponse])
-def list_owner_cocheras(
-    username: str = Body(..., embed=True),
-    password: str = Body(..., embed=True)
-):
-    """
-    List all parking spots belonging to the authenticated owner.
-    """
-    # Check if user exists and password is correct
-    user = get_user_by_username(username)
-    if not user or not verify_password(password, user["password"]):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    if user["role"] != "owner":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only owners can access their parking spots"
-        )
-    
-    result = []
-    for cochera_id, data in cocheras_db.items():
-        if data["owner_id"] == user["user_id"]:
-            result.append({
-                "cochera_id": cochera_id,
-                **data
-            })
-    return result
-
-@router.get("/{cochera_id}", response_model=CocheraResponse)
+@router.get("/{cochera_id}")
 def get_cochera(cochera_id: str):
-    """
-    Get details for a specific parking spot.
-    """
     if cochera_id not in cocheras_db:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -82,7 +48,7 @@ def get_cochera(cochera_id: str):
         **cocheras_db[cochera_id]
     }
 
-@router.post("/", response_model=CocheraResponse)
+@router.post("/")
 def create_cochera(
     cochera: CocheraCreate,
     username: str = Body(..., embed=True),
