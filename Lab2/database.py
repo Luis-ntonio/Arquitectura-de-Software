@@ -1,13 +1,13 @@
 # database.py
 import uuid
-import bcrypt
+import bcrypt # type: ignore
 import datetime
 from typing import Dict, Any
-from Lab2.models import (
+from models import (
     Distrito, Cochera, Autos, Reserva, Ticket, Disponibilidad, Tarifas,
     ReservationStatus, CocheraStatus, PaymentStatus
 )
-from Lab2.functions import cocheras 
+# from functions import cocheras 
 
 # Simulated tables (dictionaries)
 users_db: Dict[str, Dict] = {}                # Users DB
@@ -98,8 +98,14 @@ def init_sample_data():
     for i in range(len(locations)):
         cochera_id = generate_id()
         cochera_ids.append(cochera_id)
-        cocheras_db[cochera_id] = cocheras.create_cochera(cochera_id, locations[i], prices[i], CocheraStatus.available, "Standard" if i % 2 == 0 else "Compact")
-        
+        # cocheras_db[cochera_id] = cocheras.create_cochera(cochera_id, locations[i], prices[i], CocheraStatus.available, "Standard" if i % 2 == 0 else "Compact")
+        cocheras_db[cochera_id] = Cochera(
+            id=cochera_id, 
+            location=locations[i], 
+            price=prices[i], 
+            status=CocheraStatus.available, 
+            size="Standard" if i % 2 == 0 else "Compact"
+        )
         disponibilidad_db[cochera_id] = Disponibilidad(
             cochera_id=cochera_id,
             start_time=datetime.datetime.now(),
