@@ -5,10 +5,13 @@ import datetime
 from typing import Dict, Any
 
 # Simulated tables (dictionaries)
-users_db: Dict[str, Dict[str, Any]] = {}
-cocheras_db: Dict[str, Dict[str, Any]] = {}
-reservas_db: Dict[str, Dict[str, Any]] = {}
-reviews_db: Dict[str, Dict[str, Any]] = {}
+users_db: Dict[str, Dict[str, Any]] = {}       # Autos DB
+cocheras_db: Dict[str, Dict[str, Any]] = {}    # Cocheras DB
+reservas_db: Dict[str, Dict[str, Any]] = {}    # Reservas DB
+reviews_db: Dict[str, Dict[str, Any]] = {}     # Disponibilidad DB
+distrito_db: Dict[str, Dict[str, Any]] = {}    # Distrito DB
+tarifa_db: Dict[str, Dict[str, Any]] = {}      # Tarifas DB
+tickets_db: Dict[str, Dict[str, Any]] = {}     # Tickets DB
 
 def generate_id() -> str:
     return str(uuid.uuid4())
@@ -53,6 +56,9 @@ def init_sample_data():
     cocheras_db.clear()
     reservas_db.clear()
     reviews_db.clear()
+    distrito_db.clear()
+    tarifa_db.clear()
+    tickets_db.clear()
     
     # Create sample users
     owner_id = generate_id()
