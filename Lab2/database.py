@@ -3,15 +3,20 @@ import uuid
 import bcrypt
 import datetime
 from typing import Dict, Any
+from Lab2.models import (
+    Distrito, Cochera, Autos, Reserva, Ticket, Disponibilidad, Tarifas,
+    ReservationStatus, CocheraStatus, PaymentStatus
+)
 
 # Simulated tables (dictionaries)
-users_db: Dict[str, Dict[str, Any]] = {}                # Autos DB
-cocheras_db: Dict[str, Dict[str, Any]] = {}             # Cocheras DB
-reservas_db: Dict[str, Dict[str, Any]] = {}             # Reservas DB
-disponibilidad_db: Dict[str, Dict[str, Any]] = {}       # Disponibilidad DB
-distrito_db: Dict[str, Dict[str, Any]] = {}             # Distrito DB
-tarifa_db: Dict[str, Dict[str, Any]] = {}               # Tarifas DB
-tickets_db: Dict[str, Dict[str, Any]] = {}              # Tickets DB
+users_db: Dict[str, Dict] = {}                # Users DB
+autos_db: Dict[str, Autos] = {}               # Autos DB
+cocheras_db: Dict[str, Cochera] = {}          # Cocheras DB
+reservas_db: Dict[str, Reserva] = {}          # Reservas DB
+disponibilidad_db: Dict[str, Disponibilidad] = {}  # Disponibilidad DB
+distrito_db: Dict[str, Distrito] = {}         # Distrito DB
+tarifa_db: Dict[str, Tarifas] = {}            # Tarifas DB
+tickets_db: Dict[str, Ticket] = {}            # Tickets DB
 
 def generate_id() -> str:
     return str(uuid.uuid4())
@@ -41,10 +46,11 @@ def update_cochera_rating(cochera_id: str) -> None:
 def update_disponibilidad(cochera_id: str, available: bool) -> None:
     """Update the availability status of a cochera."""
     if cochera_id in disponibilidad_db:
-        disponibilidad_db[cochera_id]["available"] = available
-        disponibilidad_db[cochera_id]["last_updated"] = datetime.datetime.now().isoformat()
+        disponibilidad_db[cochera_id].status = CocheraStatus.available if available else CocheraStatus.reserved
+        disponibilidad_db[cochera_id].start_time = datetime.datetime.now()
+        disponibilidad_db[cochera_id].end_time = None
         # Update cochera status in cocheras_db as well
-        cocheras_db[cochera_id]["status"] = "available" if available else "reserved"
+        cocheras_db[cochera_id].status = CocheraStatus.available if available else CocheraStatus.reserved
     else:
         raise ValueError(f"Cochera with ID {cochera_id} does not exist.")
 
@@ -52,6 +58,7 @@ def init_sample_data():
     """Initialize sample data for development and testing"""
     # Clear existing data
     users_db.clear()
+    autos_db.clear()
     cocheras_db.clear()
     reservas_db.clear()
     disponibilidad_db.clear()
@@ -64,88 +71,92 @@ def init_sample_data():
     client_id = generate_id()
     
     users_db[owner_id] = {
+        "id": owner_id,
         "username": "parking_owner",
         "password": hash_password("owner123"),
         "role": "owner",
-        "created_at": datetime.datetime.now().isoformat(),
+        "created_at": datetime.datetime.now(),
         "email": "owner@example.com"
     }
     
     users_db[client_id] = {
+        "id": client_id,
         "username": "parking_client",
         "password": hash_password("client123"),
         "role": "client",
-        "created_at": datetime.datetime.now().isoformat(),
+        "created_at": datetime.datetime.now(),
         "email": "client@example.com"
     }
     
+    # Create sample districts
+    distrito_db["1"] = Distrito(id="1", name="Chorrillos")
+    distrito_db["2"] = Distrito(id="2", name="Miraflores")
+    distrito_db["3"] = Distrito(id="3", name="Surco")
+    distrito_db["4"] = Distrito(id="4", name="Barranco")
+    
     # Create sample cocheras
     locations = ["Chorrillos", "Miraflores", "Surco", "Barranco"]
-    prices = [5.0, 7.5, 10.0, 15.0] # Prices per hour
+    prices = [5.0, 7.5, 10.0, 15.0]  # Prices per hour
     
     cochera_ids = []
     for i in range(len(locations)):
         cochera_id = generate_id()
         cochera_ids.append(cochera_id)
-        cocheras_db[cochera_id] = {
-            "owner_id": owner_id,
-            "location": locations[i],
-            "price": prices[i],
-            "status": "available",
-            "created_at": datetime.datetime.now().isoformat(),
-            "amenities": ["Security Camera"] if i % 2 == 0 else ["Covered Parking"],
-            "size": "Standard" if i < 2 else "Large",
-            "rating_avg": 0.0,
-            "reviews_count": 0
-        }
+        cocheras_db[cochera_id] = Cochera(
+            id=cochera_id,
+            location=locations[i],
+            price=prices[i],
+            status=CocheraStatus.available,
+            size="Standard" if i < 2 else "Large"
+        )
         
         # Initialize availability for each cochera
-        disponibilidad_db[cochera_id] = {
-            "cochera_id": cochera_id,
-            "available": True,
-            "last_updated": datetime.datetime.now().isoformat()
-        }
+        disponibilidad_db[cochera_id] = Disponibilidad(
+            cochera_id=cochera_id,
+            start_time=datetime.datetime.now(),
+            end_time=None,
+            status=CocheraStatus.available
+        )
     
     # Create a sample reservation
     reserva_id = generate_id()
     start_time = datetime.datetime.now() + datetime.timedelta(hours=1)
     end_time = start_time + datetime.timedelta(hours=3)
     
-    reservas_db[reserva_id] = {
-        "user_id": client_id,
-        "cochera_id": cochera_ids[0],
-        "start_time": start_time.isoformat(),
-        "end_time": end_time.isoformat(),
-        "status": "active",
-        "created_at": datetime.datetime.now().isoformat(),
-        "price_total": prices[0] * 3,  # 3 hours
-        "payment_status": "pending"
-    }
+    reservas_db[reserva_id] = Reserva(
+        id=reserva_id,
+        cochera_id=cochera_ids[0],
+        user_id=client_id,
+        start_time=start_time,
+        end_time=end_time,
+        status=ReservationStatus.active,
+        payment_status=PaymentStatus.pending
+    )
     
     # Update cochera status
-    cocheras_db[cochera_ids[0]]["status"] = "reserved"
-    disponibilidad_db[cochera_ids[0]]["available"] = False
-    disponibilidad_db[cochera_ids[0]]["last_updated"] = datetime.datetime.now().isoformat()
-    
-    # Create sample districts
-    distrito_db["1"] = {"name": "Chorrillos"}
-    distrito_db["2"] = {"name": "Miraflores"}
-    distrito_db["3"] = {"name": "Surco"}
-    distrito_db["4"] = {"name": "Barranco"}
+    cocheras_db[cochera_ids[0]].status = CocheraStatus.reserved
+    disponibilidad_db[cochera_ids[0]].status = CocheraStatus.reserved
     
     # Create sample tariffs
-    tarifa_db["1"] = {"cochera_id": cochera_ids[0], "hourly_rate": 5.0}
-    tarifa_db["2"] = {"cochera_id": cochera_ids[1], "hourly_rate": 7.5}
-    tarifa_db["3"] = {"cochera_id": cochera_ids[2], "hourly_rate": 10.0}
-    tarifa_db["4"] = {"cochera_id": cochera_ids[3], "hourly_rate": 15.0}
+    tarifa_db[cochera_ids[0]] = Tarifas(
+        cochera_id=cochera_ids[0],
+        tarifa_hora=5.0,
+        tarifa_dia=30.0,
+        tarifa_semana=150.0,
+        tarifa_mes=500.0
+    )
     
     # Create sample tickets
     ticket_id = generate_id()
-    tickets_db[ticket_id] = {
-        "reserva_id": reserva_id,
-        "issued_at": datetime.datetime.now().isoformat(),
-        "status": "active"
-    }
+    tickets_db[ticket_id] = Ticket(
+        id=ticket_id,
+        reserva_id=reserva_id,
+        cochera_id=cochera_ids[0],
+        user_id=client_id,
+        start_time=start_time,
+        end_time=end_time,
+        status=ReservationStatus.active
+    )
     
     return {
         "owner_id": owner_id,
