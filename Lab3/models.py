@@ -4,77 +4,25 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-class ReservationStatus(str, Enum):
-    active = "active"
-    cancelled = "cancelled"
-    completed = "completed"
 
-class CocheraStatus(str, Enum):
-    available = "available"
-    reserved = "reserved"
-    occupied = "occupied"
-    maintenance = "maintenance"
-
-class PaymentStatus(str, Enum):
-    pending = "pending"
-    completed = "completed"
-    refunded = "refunded"
-    failed = "failed"
-
-# MODELO XYZ
-class Distrito(BaseModel):
+class Case(BaseModel):
     id: str
-    name: str
+    attorney_id: str
+    client_id: str
+    status: str
+    additional_info: Optional[str] = None
 
-class Cochera(BaseModel):
+class Document(BaseModel):
     id: str
-    location: str
-    price: float
-    status: CocheraStatus
-    size: str
+    case_id: str
+    file_path: str
+    uploaded_at: datetime
 
-class Autos(BaseModel):
-    id : str
-    modelo: str
-    marca: str
-    color: str
-    placa: str
-    cochera_id: str
-
-class Reserva(BaseModel):
+class Attachment(BaseModel):
     id: str
-    cochera_id: str
-    user_id: str
-    start_time: datetime
-    end_time: datetime
-    status: ReservationStatus = ReservationStatus.active
-    payment_status: PaymentStatus = PaymentStatus.pending
-
-class Ticket(BaseModel):
-    id: str
-    reserva_id: str
-    cochera_id: str
-    user_id: str
-    start_time: datetime
-    end_time: datetime
-    status: ReservationStatus = ReservationStatus.active
-
-class Disponibilidad(BaseModel):
-    cochera_id: str
-    start_time: datetime
-    end_time: Optional[datetime] = None
-    status: CocheraStatus = CocheraStatus.available
-
-class Tarifas(BaseModel):
-    cochera_id: str
-    tarifa_hora: float
-    tarifa_dia: float
-    tarifa_semana: float
-    tarifa_mes: float
-
-
-
-
+    document_id: str
+    file_path: str
+    uploaded_at: datetime
 
 # Enum for user roles
 class UserRole(str, Enum):
@@ -94,24 +42,3 @@ class UserResponse(BaseModel):
     role: UserRole
     email: str
     created_at: str
-
-# Reservation Models
-class ReservaCreate(BaseModel):
-    cochera_id: str
-    start_time: str
-    end_time: str
-
-class ReservaUpdate(BaseModel):
-    status: Optional[ReservationStatus]
-    payment_status: Optional[PaymentStatus]
-
-class ReservaResponse(BaseModel):
-    reserva_id: str
-    user_id: str
-    cochera_id: str
-    start_time: str
-    end_time: str
-    status: ReservationStatus
-    created_at: str
-    price_total: float
-    payment_status: PaymentStatus

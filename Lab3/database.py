@@ -11,13 +11,9 @@ from models import (
 
 # Simulated tables (dictionaries)
 users_db: Dict[str, Dict] = {}                # Users DB
-autos_db: Dict[str, Autos] = {}               # Autos DB
-cocheras_db: Dict[str, Cochera] = {}          # Cocheras DB
-reservas_db: Dict[str, Reserva] = {}          # Reservas DB
-disponibilidad_db: Dict[str, Disponibilidad] = {}  # Disponibilidad DB
-distrito_db: Dict[str, Distrito] = {}         # Distrito DB
-tarifa_db: Dict[str, Tarifas] = {}            # Tarifas DB
-tickets_db: Dict[str, Ticket] = {}            # Tickets DB
+cases_db: Dict[str, Dict] = {}                # Cases DB
+documents_db: Dict[str, Dict] = {}            # Documents DB
+attachments_db: Dict[str, Dict] = {}          # Attachments DB
 
 def generate_id() -> str:
     return str(uuid.uuid4())
@@ -39,28 +35,13 @@ def get_user_by_username(username: str) -> Dict[str, Any]:
             return {"user_id": user_id, **user_data}
     return None
 
-def update_disponibilidad(cochera_id: str, available: bool) -> None:
-    """Update the availability status of a cochera."""
-    if cochera_id in disponibilidad_db:
-        disponibilidad_db[cochera_id].status = CocheraStatus.available if available else CocheraStatus.reserved
-        disponibilidad_db[cochera_id].start_time = datetime.datetime.now()
-        disponibilidad_db[cochera_id].end_time = None
-        # Update cochera status in cocheras_db as well
-        cocheras_db[cochera_id].status = CocheraStatus.available if available else CocheraStatus.reserved
-    else:
-        raise ValueError(f"Cochera with ID {cochera_id} does not exist.")
-
 def init_sample_data():
     """Initialize sample data for development and testing"""
     # Clear existing data
     users_db.clear()
-    autos_db.clear()
-    cocheras_db.clear()
-    reservas_db.clear()
-    disponibilidad_db.clear()
-    distrito_db.clear()
-    tarifa_db.clear()
-    tickets_db.clear()
+    cases_db.clear()
+    documents_db.clear()
+    attachments_db.clear()
     
     # Create sample users
     owner_id = generate_id()
@@ -83,80 +64,31 @@ def init_sample_data():
         "created_at": datetime.datetime.now(),
         "email": "client@example.com"
     }
-    
-    # Create sample districts
-    distrito_db["1"] = Distrito(id="1", name="Chorrillos")
-    distrito_db["2"] = Distrito(id="2", name="Miraflores")
-    distrito_db["3"] = Distrito(id="3", name="Surco")
-    distrito_db["4"] = Distrito(id="4", name="Barranco")
-    
-    # Create sample cocheras
-    locations = ["Chorrillos", "Miraflores", "Surco", "Barranco"]
-    prices = [5.0, 7.5, 10.0, 15.0]  # Prices per hour
-    
-    cochera_ids = []
-    for i in range(len(locations)):
-        cochera_id = generate_id()
-        cochera_ids.append(cochera_id)
-        # cocheras_db[cochera_id] = cocheras.create_cochera(cochera_id, locations[i], prices[i], CocheraStatus.available, "Standard" if i % 2 == 0 else "Compact")
-        cocheras_db[cochera_id] = Cochera(
-            id=cochera_id, 
-            location=locations[i], 
-            price=prices[i], 
-            status=CocheraStatus.available, 
-            size="Standard" if i % 2 == 0 else "Compact"
-        )
-        disponibilidad_db[cochera_id] = Disponibilidad(
-            cochera_id=cochera_id,
-            start_time=datetime.datetime.now(),
-            end_time=None,
-            status=CocheraStatus.available
-        )
-    
-    # Create a sample reservation
-    reserva_id = generate_id()
-    start_time = datetime.datetime.now() + datetime.timedelta(hours=1)
-    end_time = start_time + datetime.timedelta(hours=3)
-    
-    reservas_db[reserva_id] = Reserva(
-        id=reserva_id,
-        cochera_id=cochera_ids[0],
-        user_id=client_id,
-        start_time=start_time,
-        end_time=end_time,
-        status=ReservationStatus.active,
-        payment_status=PaymentStatus.pending
-    )
-    
-    # Update cochera status
-    cocheras_db[cochera_ids[0]].status = CocheraStatus.reserved
-    disponibilidad_db[cochera_ids[0]].status = CocheraStatus.reserved
-    
-    # Create sample tariffs
-    tarifa_db[cochera_ids[0]] = Tarifas(
-        cochera_id=cochera_ids[0],
-        tarifa_hora=5.0,
-        tarifa_dia=30.0,
-        tarifa_semana=150.0,
-        tarifa_mes=500.0
-    )
-    
-    # Create sample tickets
-    ticket_id = generate_id()
-    tickets_db[ticket_id] = Ticket(
-        id=ticket_id,
-        reserva_id=reserva_id,
-        cochera_id=cochera_ids[0],
-        user_id=client_id,
-        start_time=start_time,
-        end_time=end_time,
-        status=ReservationStatus.active
-    )
-    
-    return {
-        "owner_id": owner_id,
+
+    # Create sample cases
+    case_id = generate_id()
+    cases_db[case_id] = {
+        "id": case_id,
+        "attorney_id": owner_id,
         "client_id": client_id,
-        "cochera_ids": cochera_ids,
-        "reserva_id": reserva_id,
-        "ticket_id": ticket_id
+        "status": "open",
+        "additional_info": "Sample case for testing."
+    }
+
+    # Create sample documents
+    document_id = generate_id()
+    documents_db[document_id] = {
+        "id": document_id,
+        "case_id": case_id,
+        "file_path": "/uploads/sample_document.pdf",
+        "uploaded_at": datetime.datetime.now(),
+    }
+
+    # Create sample attachments
+    attachment_id = generate_id()
+    attachments_db[attachment_id] = {
+        "id": attachment_id,
+        "document_id": document_id,
+        "file_path": "/uploads/sample_attachment.pdf",
+        "uploaded_at": datetime.datetime.now(),
     }
