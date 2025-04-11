@@ -4,21 +4,18 @@ from enum import Enum
 from typing import Optional
 
 class Attorney(BaseModel):
-    id : str
     name: str
     email: str
     phone: str
     type: str
 
 class Client(BaseModel):
-    id: str
     name: str
     email: str
     phone: str
     address: str
 
 class Cases(BaseModel):
-    id: str
     name: str
     status: str
     description: str
@@ -27,7 +24,6 @@ class Cases(BaseModel):
     attachment_id : str
 
 class Attachment(BaseModel):
-    id: str
     name: str
     type: str
     size: int
