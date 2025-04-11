@@ -56,6 +56,24 @@ def test_register_user_success(client: TestClient):
     assert "user_id" in data
     assert data["user_id"] in users_db
 
+def test_register_new_owner(client: TestClient):
+    """Test the happy path of registering a new owner."""
+    new_owner = {
+        "username": "new_owner",
+        "password": "ownerpassword",
+        "role": "owner",
+        "email": "new_owner@example.com"
+    }
+    response = client.post("/auth/register", json=new_owner)
+    assert response.status_code == 200
+    data = response.json()
+
+    # Verify the new owner is registered
+    assert data["username"] == new_owner["username"]
+    assert data["role"] == "owner"
+    assert data["email"] == new_owner["email"]
+    assert data["user_id"] in users_db
+
 def test_login_success(client: TestClient):
     """Test successful user login for owner and client."""
     response_owner = client.post("/api/auth/login", json=OWNER_USER)
@@ -153,4 +171,57 @@ def test_upload_attachment_invalid_document(client: TestClient):
         files={"file": (file_name, file_content, "application/pdf")},
     )
     assert response.status_code == 404
+
+def test_client_hires_owner_and_attaches_documents(client: TestClient):
+    """Test the happy path of a client hiring an owner for a case and attaching documents."""
+    # Step 1: Client logs in
+    client_login_response = client.post("/auth/login", json=CLIENT_USER)
+    assert client_login_response.status_code == 200
+    client_data = client_login_response.json()
+    client_id = client_data["user_id"]
+
+    # Step 2: Owner logs in
+    owner_login_response = client.post("/auth/login", json=OWNER_USER)
+    assert owner_login_response.status_code == 200
+    owner_data = owner_login_response.json()
+    owner_id = owner_data["user_id"]
+
+    # Step 3: Client creates a new case with the owner
+    new_case = {
+        "id": "case_456",
+        "attorney_id": owner_id,
+        "client_id": client_id,
+        "status": "open",
+        "additional_info": "Client hiring owner for a legal case."
+    }
+    case_response = client.post("/cases/", json=new_case)
+    assert case_response.status_code == 200
+    case_data = case_response.json()
+    case_id = case_data["id"]
+
+    # Step 4: Client uploads a document for the case
+    file_content = b"Sample case document content"
+    file_name = "case_document.pdf"
+    document_response = client.post(
+        f"/documents/upload/?case_id={case_id}",
+        files={"file": (file_name, file_content, "application/pdf")},
+    )
+    assert document_response.status_code == 200
+    document_data = document_response.json()
+    document_id = document_data["id"]
+
+    # Step 5: Client uploads an attachment for the document
+    attachment_content = b"Sample attachment content"
+    attachment_name = "case_attachment.pdf"
+    attachment_response = client.post(
+        f"/attachments/upload/?document_id={document_id}",
+        files={"file": (attachment_name, attachment_content, "application/pdf")},
+    )
+    assert attachment_response.status_code == 200
+    attachment_data = attachment_response.json()
+
+    # Verify the attachment is linked to the document
+    assert attachment_data["document_id"] == document_id
+    assert "file_path" in attachment_data
+    assert attachment_data["file_path"].endswith(".pdf")
 

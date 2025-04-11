@@ -8,6 +8,9 @@ router = APIRouter()
 
 @router.post("/register", response_model=UserResponse)
 def register_user(user: UserCreate):
+    """
+    Register a new user (client or owner).
+    """
     # Check if username already exists
     if get_user_by_username(user.username):
         raise HTTPException(
