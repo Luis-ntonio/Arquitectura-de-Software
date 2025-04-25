@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/payment', methods=['POST'])
 def payment():
-    return jsonify({"message": "Payment processed (stub)"}), 200
+    return jsonify({"message": "Payment processed"}), 200
 
 if __name__ == '__main__':
     app.run(port=5004)
