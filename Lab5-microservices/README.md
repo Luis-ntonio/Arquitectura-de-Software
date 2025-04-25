@@ -18,80 +18,44 @@ Esta demostración implementa una arquitectura de microservicios simple, comunic
 
 ### Requisitos Previos
 
-- Python 3.11+
-- RabbitMQ (puede correr en Docker)
+- Docker y Docker Compose
+- (Opcional) Python 3.11+ si deseas ejecutar servicios fuera de Docker
 
 ---
 
-### Instalación
+### Instalación y Ejecución
+
+#### 1. Navega al directorio del proyecto
 
 ```bash
-pip install -r requirements.txt
+cd Lab5-microservices
 ```
 
-Iniciar RabbitMQ con Docker:
+#### 2. Arranca todos los servicios con Docker Compose
 
 ```bash
-docker run -d --hostname my-rabbit --name some-rabbit -p 5672:5672 rabbitmq:3
+docker-compose down -v
+docker-compose up --build
 ```
 
----
+Esto levantará todos los microservicios y RabbitMQ definidos en el `docker-compose.yml` en contenedores separados.
 
-  ### Ejecución de los Servicios
-
-  Ejecutar cada microservicio en diferentes terminales para que estén disponibles
-  para la comunicación.
-
-### Ejecución de los Servicios
-
-En diferentes terminales, ejecutar:
+#### 3. Simula el flujo de negocio ejecutando el script principal (En otra terminal):
 
 ```bash
-python services/user_services.py
-python services/product_service.py
-python services/order_service.py
-python services/payment_service.py
-python services/notification_service.py
+docker-compose exec user_service python main.py
 ```
+Verás los mensajes de los servicios y la simulación del flujo de negocio (registro, login, listado de productos, creación de pedido, etc.).
 
----
+### Notas
 
-### Simulación de Caso de Uso
+## Comunicación entre servicios
 
-Ejecutar el flujo principal con:
+- Los servicios se comunican entre sí a través de HTTP usando los endpoints definidos en cada servicio.
+- El Event Bus (RabbitMQ) se utiliza para enviar eventos entre servicios.
 
-```bash
-python main.py
-```
-
-Esto simula:
-
-- Registro y login de usuario
-- Consulta de productos
-- Creación de pedido (emitiendo evento)
-- Procesamiento de pago
-- Recepción de notificación (impresa por `notification_service`)
-
----
-
-### Arquitectura Física
+## Arquitectura Física
 
 - Cada servicio es un microservicio independiente.
 - Comunicación asíncrona mediante RabbitMQ.
 - Fácilmente escalable y mantenible.
-
----
-
-### Notas
-
-- Este es un **POC**, los datos no se persisten y la lógica es simulada.
-- Puedes extender los servicios para agregar más lógica o persistencia real.
-
----
-
-### ¿Listo para implementar?
-
-¿Quieres que te genere el código de `main.py` y el bloque actualizado de `README.md` para que lo copies directamente?
-```
-
-¿Quieres que te ayude ahora con el código de `main.py` o lo dejamos listo para que lo copies al `README.md` primero?
