@@ -55,5 +55,3 @@ services:
     command: python services/notification_service.py
     depends_on:
       - rabbitmq
-
-# Add more services as needed
