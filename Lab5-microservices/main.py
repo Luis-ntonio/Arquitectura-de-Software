@@ -18,12 +18,16 @@ def simulate_user_flow():
     products = r.json()
     print(products)
 
-    # 4. Create order (this triggers event)
-    print("Creating order...")
-    r = requests.post("http://order_service:5003/order", json={"user": "pedro", "product_id": products[0]["id"]})
-    print(r.json())
+    # 4. Request product (instead of directly creating an order)
+    print("Requesting product...")
+    for _ in range(10):  # Simulate 300 requests to trigger the batch
+        r = requests.post("http://request_service:5005/request_product", json={"product_id": products[0]["id"]})
+        print(r.json())
 
-    # 5. Process payment
+    # 5. Wait for the order to be created automatically
+    print("Waiting for the order to be created by request_service...")
+
+    # 6. Process payment
     print("Processing payment...")
     r = requests.post("http://payment_service:5004/payment", json={"user": "pedro", "order_id": 1, "amount": 100})
     print(r.json())
