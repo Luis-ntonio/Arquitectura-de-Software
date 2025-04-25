@@ -38,6 +38,22 @@ services:
     ports:
       - "5003:5003"
 
+  provider_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python services/provider_service.py
+    ports:
+      - "5010:5010"
+
+  receipt_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python services/receipt_service.py
+    ports:
+      - "5011:5011"
+
   payment_service:
     build:
       context: .
