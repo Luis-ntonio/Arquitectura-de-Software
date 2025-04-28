@@ -82,10 +82,10 @@ services:
     ports:
       - "5006:5006"
 
-    report_service:
-      build:
-        context: .
-        dockerfile: Dockerfile
-      command: python services/report_service.py
-      depends_on:
-        - rabbitmq
+  report_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python services/report_service.py
+    depends_on:
+      - rabbitmq

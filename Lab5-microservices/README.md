@@ -25,6 +25,9 @@ Esta demostración implementa una arquitectura de microservicios simple, comunic
 
 ### Instalación y Ejecución
 
+> **Nota importante:**
+> Antes de ejecutar los comandos de Docker Compose, asegúrate de que **Docker Desktop esté abierto y en ejecución** en tu sistema. Si Docker no está corriendo, los comandos fallarán con errores de conexión.
+
 #### 1. Navega al directorio del proyecto
 
 ```bash
